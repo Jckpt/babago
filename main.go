@@ -577,11 +577,13 @@ func generateVideoName(url string) string {
 }
 
 func logToFile(msg string) {
-	f, err := tea.LogToFile("debug.log", "debug")
-	if err != nil {
-		fmt.Println("fatal:", err)
-		os.Exit(1)
+	if os.Getenv("DEBUG") == "true" {
+		f, err := tea.LogToFile("debug.log", "debug")
+		if err != nil {
+			fmt.Println("fatal:", err)
+			os.Exit(1)
+		}
+		defer f.Close()
+		f.WriteString("TIME: " + time.Now().Format("2006-01-02 15:04:05") + " " + msg + "\n")
 	}
-	defer f.Close()
-	f.WriteString("TIME: " + time.Now().Format("2006-01-02 15:04:05") + " " + msg + "\n")
 }
